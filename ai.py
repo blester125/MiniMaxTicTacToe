@@ -3,7 +3,7 @@
 # [ -Imports ]
 # [ -Project ]
 from board import (
-    evaluate_board, update_board, possible_moves, get_opponent, get_value
+    evaluate_board, update_board, possible_moves, get_opponent, TOKENS
 )
 
 

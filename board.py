@@ -65,7 +65,7 @@ def possible_moves(board):
 
 
 def empty_board(board):
-    return not np.any(board == TOKENS.BLANK):
+    return not np.any(board == TOKENS.BLANK)
 
 def evaluate_board(board):
     """Chack for the winner on the board."""
