@@ -1,9 +1,15 @@
+"""The runner that facilitates a game of tick tack toe."""
+
+# [ -Imports ]
+# [ -Python ]
 import argparse
+# [ -Project ]
 from board import blank_board, value_to_str, TOKENS, evaluate_board, print_board
 from player import Player, ComputerPlayer
 
 
 def play(game_board, x_player, o_player):
+    """Play a game."""
     players = [x_player, o_player]
     active_player = 0
 
@@ -22,7 +28,8 @@ def play(game_board, x_player, o_player):
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    """Configure the game."""
+    parser = argparse.ArgumentParser("Play tic-tac-toe aganist an AI powered by minimax search")
     parser.add_argument("--players", "-p", type=int, choices=[0, 1, 2], default=1, dest="players")
     parser.add_argument("--order", "-o", type=int, choices=[1, 2], default=1, dest="order")
     args = parser.parse_args()

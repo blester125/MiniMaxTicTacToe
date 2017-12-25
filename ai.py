@@ -1,13 +1,21 @@
-from board import evaluate_board, update_board, TOKENS, possible_moves, print_board
+"""The MiniMax Serach."""
+
+# [ -Imports ]
+# [ -Project ]
+from board import (
+    evaluate_board, update_board, possible_moves, get_opponent, get_value
+)
 
 
 def minimax_search(board, token):
+    """Start call of the minimax search."""
     opp_token = get_opponent(token)
     best_move, _ = max_search(board, token, opp_token)
     return best_move
 
 
 def max_search(board, token, opp_token):
+    """Search for the best move you can do."""
     best_value = None
     best_move = None
     for move in possible_moves(board):
@@ -24,6 +32,7 @@ def max_search(board, token, opp_token):
 
 
 def mini_search(board, token, opp_token):
+    """Search for the best move your opponent can make."""
     best_value = None
     best_move = None
     for move in possible_moves(board):
@@ -39,7 +48,17 @@ def mini_search(board, token, opp_token):
     return best_move, best_value
 
 
+def mp_minimax_search(board, token, pool):
+    """Entry point for minimax search where the initial moves are done in different processes."""
+    opp_token = get_opponent(token)
+    moves = possible_moves(board)
+    inputs = list(zip([board]*len(moves), moves, [token] * len(moves), [opp_token] * len(moves)))
+    results = pool.map(mp_max_search, inputs)
+    return sorted(results, key=lambda x: x[1], reverse=True)[0][0]
+
+
 def mp_max_search(inputs):
+    """Special case of the first move for multiprocessing."""
     board = inputs[0]
     move = inputs[1]
     token = inputs[2]
@@ -53,24 +72,11 @@ def mp_max_search(inputs):
     return move, value
 
 
-def get_opponent(token):
-    if token == TOKENS.X:
-        return TOKENS.O
-    return TOKENS.X
-
-
 def get_value(winner, token, opp_token):
+    """Get the value for a win. lose, draw."""
     if winner == token:
         return 1
     elif winner == opp_token:
         return -1
     else:
         return 0
-
-
-def mp_minimax_search(board, token, pool):
-    opp_token = get_opponent(token)
-    moves = possible_moves(board)
-    inputs = list(zip([board]*len(moves), moves, [token] * len(moves), [opp_token] * len(moves)))
-    results = pool.map(mp_max_search, inputs)
-    return sorted(results, key=lambda x: x[1], reverse=True)[0][0]

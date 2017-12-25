@@ -1,22 +1,33 @@
-import numpy as np
+"""Player objects."""
+
+# [ -Imports ]
+# [ -Python ]
 import multiprocessing as mp
-from board import update_board, value_to_str, TOKENS
-from ai import minimax_search, mp_minimax_search
+# [ -Third Party ]
+import numpy as np
+# [ -Project ]
+from board import empty_board, update_board, value_to_str
+from ai import mp_minimax_search
 
 
 class BasePlayer(object):
+    """Base palyer, saves token and makes a move."""
 
     def __init__(self, token):
+        """Initialize the object."""
         self.token = token
 
     def play(self, pos, board):
+        """Make the move at pos."""
         board = update_board(board, pos, self.token)
         return board
 
 
 class Player(BasePlayer):
+    """Human Player."""
 
     def play(self, board):
+        """Make a move and keep running it when they try to play on a full square."""
         played = False
         while not played:
             try:
@@ -32,20 +43,17 @@ class Player(BasePlayer):
 
 
 class ComputerPlayer(BasePlayer):
+    """Computer Player."""
 
     def __init__(self, token):
+        """Initialize the object."""
         super().__init__(token)
         self.pool = mp.Pool(processes=mp.cpu_count())
 
-    # def play(self, board):
-    #     if np.all(board == TOKENS.BLANK):
-    #         move = (np.random.randint(0, 3), np.random.randint(0, 3))
-    #     else:
-    #         move = minimax_search(board, self.token)
-    #     return super().play(move, board)
-
     def play(self, board):
-        if np.all(board == TOKENS.BLANK):
+        """Make a move."""
+        # The first move of the game doesn't matter much so do it randomly to speed things up
+        if empty_board(board):
             move = (np.random.randint(0, 3), np.random.randint(0, 3))
         else:
             move = mp_minimax_search(board, self.token, self.pool)

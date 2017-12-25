@@ -1,11 +1,18 @@
+"""Function to manipulate the board."""
+
+# [ -Imports ]
+# [ -Python ]
 from enum import Enum
+# [ -Third Party ]
 import numpy as np
+
 
 BOARD_SIZE = 3
 TOKENS = Enum('TOKENS', 'X O BLANK DRAW')
 
 
 def value_to_str(value):
+    """Convert the enum values to string."""
     if value is TOKENS.X:
         return " X "
     if value is TOKENS.O:
@@ -17,10 +24,12 @@ def value_to_str(value):
 
 
 def blank_board(size=BOARD_SIZE):
+    """Get a blank board."""
     return np.full((size, size), TOKENS.BLANK)
 
 
 def print_board(board):
+    """Print out the board."""
     rows = []
     for row in board:
         string = ['[']
@@ -32,6 +41,7 @@ def print_board(board):
 
 
 def update_board(board, pos, value):
+    """Make a move on the board."""
     new_board = board.copy()
     row, col = pos
     if new_board[row][col] != TOKENS.BLANK:
@@ -45,6 +55,7 @@ def update_board(board, pos, value):
 
 
 def possible_moves(board):
+    """Get all avaiable moves on the board."""
     moves = []
     for i in range(len(board)):
         for j in range(len(board[i])):
@@ -53,7 +64,11 @@ def possible_moves(board):
     return moves
 
 
+def empty_board(board):
+    return not np.any(board == TOKENS.BLANK):
+
 def evaluate_board(board):
+    """Chack for the winner on the board."""
     # Check rows
     for row in board:
         if np.all(row == TOKENS.X):
@@ -77,31 +92,15 @@ def evaluate_board(board):
     if np.all(diag1 == TOKENS.O) or np.all(diag2 == TOKENS.O):
         return TOKENS.O
 
+    # Check for a Draw
     if not np.any((board == TOKENS.BLANK)):
         return TOKENS.DRAW
 
     return TOKENS.BLANK
 
 
-if __name__ == "__main__":
-    b = blank_board()
-    print_board(b)
-    b = update_board(b, (0, 0), TOKENS.X)
-    b = update_board(b, (0, 1), TOKENS.O)
-    b = update_board(b, (0, 2), TOKENS.X)
-    print(evaluate_board(b))
-    print_board(b)
-    b = update_board(b, (1, 0), TOKENS.X)
-    b = update_board(b, (2, 0), TOKENS.X)
-    print(evaluate_board(b))
-    print_board(b)
-    b[1, 0] = TOKENS.O
-    try:
-        b = update_board(b, (1, 0), TOKENS.X)
-    except Exception as e:
-        print(e)
-    print_board(b)
-    b = update_board(b, (1, 1), TOKENS.X)
-    print(evaluate_board(b))
-    print_board(b)
-    print(possible_moves(b))
+def get_opponent(token):
+    """Get the opponent enum value."""
+    if token == TOKENS.X:
+        return TOKENS.O
+    return TOKENS.X
