@@ -29,7 +29,7 @@ def play(game_board, x_player, o_player):
 
 def main():
     """Configure the game."""
-    parser = argparse.ArgumentParser("Play tic-tac-toe aganist an AI powered by minimax search")
+    parser = argparse.ArgumentParser("Play tic-tac-toe against an AI powered by minimax search")
     parser.add_argument("--players", "-p", type=int, choices=[0, 1, 2], default=1, dest="players")
     parser.add_argument("--order", "-o", type=int, choices=[1, 2], default=1, dest="order")
     args = parser.parse_args()

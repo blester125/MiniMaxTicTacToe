@@ -52,8 +52,17 @@ def mp_minimax_search(board, token, pool):
     """Entry point for minimax search where the initial moves are done in different processes."""
     opp_token = get_opponent(token)
     moves = possible_moves(board)
-    inputs = list(zip([board]*len(moves), moves, [token] * len(moves), [opp_token] * len(moves)))
+    inputs = list(
+        zip(
+            [board]*len(moves),
+            moves,
+            [token] * len(moves),
+            [opp_token] * len(moves)
+        )
+    )
+    # results is a list of (move, score) tuples
     results = pool.map(mp_max_search, inputs)
+    # return the best move sorted by score
     return sorted(results, key=lambda x: x[1], reverse=True)[0][0]
 
 

@@ -52,9 +52,5 @@ class ComputerPlayer(BasePlayer):
 
     def play(self, board):
         """Make a move."""
-        # The first move of the game doesn't matter much so do it randomly to speed things up
-        if empty_board(board):
-            move = (np.random.randint(0, 3), np.random.randint(0, 3))
-        else:
-            move = mp_minimax_search(board, self.token, self.pool)
+        move = mp_minimax_search(board, self.token, self.pool)
         return super().play(move, board)
